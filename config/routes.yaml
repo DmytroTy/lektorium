@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_yaml:
+    path: /yaml
+    controller: App\Controller\HomeWorkController::appYaml
