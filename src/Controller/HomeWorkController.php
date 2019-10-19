@@ -22,8 +22,15 @@ class HomeWorkController extends AbstractController
         );
     }
 
+    public function php()
+    {
+        return new Response(
+            '<html><body>Php</body></html>'
+        );
+    }
+
     /**
-     * @Route("/annotation")
+     * @Route("/annotation", name="app_annotation")
      */
     public function annotation()
     {
