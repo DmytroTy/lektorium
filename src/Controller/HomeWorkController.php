@@ -22,18 +22,20 @@ class HomeWorkController extends AbstractController
         );
     }
 
-    public function php()
+    public function php(string $param)
     {
         return new Response(
-            '<html><body>Php</body></html>'
+            '<html><body>Php ' . $param . '</body></html>'
         );
     }
 
     /**
-     * @Route("/annotation", name="app_annotation")
+     * @Route("/annotation/{word}", name="app_annotation", requirements={"word"="[A-Za-z]+"})
      */
-    public function annotation()
+    public function annotation(string $word)
     {
-        return $this->render('templ.html.twig');
+        return $this->render('templ.html.twig', [
+            'word' => $word,
+        ]);
     }
 }
