@@ -17,9 +17,7 @@ class HomeWorkController extends AbstractController
 
     public function xml()
     {
-        return new Response(
-            '<html><body>Xml</body></html>'
-        );
+        return $this->json(['route' => 'xml', 'response' => 'JSON']);
     }
 
     public function php(string $param)
