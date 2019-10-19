@@ -15,6 +15,13 @@ class HomeWorkController extends AbstractController
         );
     }
 
+    public function xml()
+    {
+        return new Response(
+            '<html><body>Xml</body></html>'
+        );
+    }
+
     /**
      * @Route("/annotation")
      */
