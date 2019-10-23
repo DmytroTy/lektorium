@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeWorkController extends AbstractController
 {
@@ -39,5 +40,13 @@ class HomeWorkController extends AbstractController
             'word' => $word,
             'url' => $url,
         ]);
+    }
+
+    /**
+     * @Route("/redirect", name="app_redirect")
+     */
+    public function index()
+    {
+        return $this->redirectToRoute('app_annotation', ['word' => 'word'], 301);
     }
 }
