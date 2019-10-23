@@ -32,8 +32,12 @@ class HomeWorkController extends AbstractController
      */
     public function annotation(string $word)
     {
+        $number = random_int(0, 100);
+        $url = $this->generateUrl('app_php', ['param' => $number]);
+
         return $this->render('templ.html.twig', [
             'word' => $word,
+            'url' => $url,
         ]);
     }
 }
