@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,6 +49,11 @@ class Project
      */
     private $people;
 
+    public function __construct()
+    {
+        $this->people = new ArrayCollection();
+    }
+
     /**
      * @return int
      */
@@ -66,10 +72,12 @@ class Project
 
     /**
      * @param string $title
+     * @return $this
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
     }
 
     /**
@@ -82,11 +90,68 @@ class Project
 
     /**
      * @param string $description
+     * @return $this
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+        return $this;
     }
 
+    /**
+     * @return Company
+     */
+    public function getCompany(): Company
+    {
+        return $this->company;
+    }
 
+    /**
+     * @param Company $company
+     * @return Project
+     */
+    public function setCompany(Company $company): Project
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProjectPeople[]
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    /**
+     * @param ProjectPeople $person
+     * @return Project
+     */
+    public function addPerson(ProjectPeople $person): self
+    {
+        if (!$this->people->contains($person)) {
+            $this->people[] = $person;
+            $person->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectPeople $person
+     * @return Project
+     */
+    public function removePerson(ProjectPeople $person): self
+    {
+        if ($this->people->contains($person)) {
+            $this->people->removeElement($person);
+            // set the owning side to null (unless already changed)
+            if ($person->getProject() === $this) {
+                $person->setProject(null);
+            }
+        }
+
+        return $this;
+    }
 }

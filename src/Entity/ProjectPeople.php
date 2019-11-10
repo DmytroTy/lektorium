@@ -58,10 +58,12 @@ class ProjectPeople
 
     /**
      * @param string $type
+     * @return $this
      */
-    public function setType(string $type): void
+    public function setType(string $type): self
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
@@ -74,11 +76,29 @@ class ProjectPeople
 
     /**
      * @param string $responsibility
+     * @return $this
      */
-    public function setResponsibility(string $responsibility): void
+    public function setResponsibility(string $responsibility): self
     {
         $this->responsibility = $responsibility;
+        return $this;
     }
 
+    /**
+     * @return Project
+     */
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
 
+    /**
+     * @param Project $project
+     * @return ProjectPeople
+     */
+    public function setProject(Project $project): ProjectPeople
+    {
+        $this->project = $project;
+        return $this;
+    }
 }

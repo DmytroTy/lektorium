@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +68,11 @@ class Staff
      */
     private $departments;
 
+    public function __construct()
+    {
+        $this->departments = new ArrayCollection();
+    }
+
     /**
      * @return int
      */
@@ -85,10 +91,12 @@ class Staff
 
     /**
      * @param string $fullName
+     * @return $this
      */
-    public function setFullName(string $fullName): void
+    public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
+        return $this;
     }
 
     /**
@@ -101,10 +109,12 @@ class Staff
 
     /**
      * @param string $email
+     * @return $this
      */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -117,10 +127,12 @@ class Staff
 
     /**
      * @param string $phone
+     * @return $this
      */
-    public function setPhone(string $phone): void
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+        return $this;
     }
 
     /**
@@ -133,10 +145,12 @@ class Staff
 
     /**
      * @param mixed $createdAt
+     * @return $this
      */
-    public function setCreatedAt($createdAt): void
+    public function setCreatedAt($createdAt): self
     {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**
@@ -149,10 +163,12 @@ class Staff
 
     /**
      * @param string $skills
+     * @return $this
      */
-    public function setSkills(string $skills): void
+    public function setSkills(string $skills): self
     {
         $this->skills = $skills;
+        return $this;
     }
 
     /**
@@ -165,11 +181,45 @@ class Staff
 
     /**
      * @param string $comments
+     * @return $this
      */
-    public function setComments(string $comments): void
+    public function setComments(string $comments): self
     {
         $this->comments = $comments;
+        return $this;
     }
 
+    /**
+     * @return Collection|Department[]
+     */
+    public function getDepartments(): Collection
+    {
+        return $this->departments;
+    }
 
+    /**
+     * @param Department $department
+     * @return Staff
+     */
+    public function addDepartment(Department $department): self
+    {
+        if (!$this->departments->contains($department)) {
+            $this->departments[] = $department;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Department $department
+     * @return Staff
+     */
+    public function removeDepartment(Department $department): self
+    {
+        if ($this->departments->contains($department)) {
+            $this->departments->removeElement($department);
+        }
+
+        return $this;
+    }
 }
