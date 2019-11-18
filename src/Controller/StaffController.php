@@ -81,7 +81,7 @@ class StaffController extends AbstractController
             );
         }
 
-        $staff->setTitle($staff->setTitle().' edited');
+        $staff->setFullName($staff->getFullName().' edited');
         $em->flush();
 
         return $this->redirectToRoute('staff_show', ['id' => $staff->getId()]);
