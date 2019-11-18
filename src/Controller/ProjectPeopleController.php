@@ -33,33 +33,23 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/{id}", name="projectPeople_show", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function show(int $id): Response
+    public function show(ProjectPeople $projectPeople): Response
     {
-        $projectPeople = $this->getDoctrine()
-            ->getRepository(ProjectPeople::class)
-            ->find($id);
-
-        if (!$projectPeople) {
-            throw $this->createNotFoundException(
-                'No projectPeople found for id '.$id
-            );
-        }
-
         return new Response('Check out this great projectPeople: '.$projectPeople->getType());
     }
 
     /**
      * @Route("/new", name="projectPeople_create", methods={"GET"})
      */
-    public function create(): Response
+    public function create(EntityManagerInterface $em): Response
     {
         $projectPeople = new ProjectPeople();
 
         $projectPeople->setType('Type')
             ->setResponsibility('Responsibility');
 
-        $this->getDoctrine()->getManager()->persist($projectPeople);
-        $this->getDoctrine()->getManager()->flush();
+        $em->persist($projectPeople);
+        $em->flush();
 
         return new Response('Saved new projectPeople with id '.$projectPeople->getId());
     }
@@ -67,18 +57,10 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/{id}/edit", name="projectPeople_update", methods={"GET"})
      */
-    public function update(int $id): Response
+    public function update(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $projectPeople = $em->getRepository(ProjectPeople::class)->find($id);
-
-        if (!$projectPeople) {
-            throw $this->createNotFoundException(
-                'No projectPeople found for id '.$id
-            );
-        }
-
         $projectPeople->setType($projectPeople->getType().' edited');
+
         $em->flush();
 
         return $this->redirectToRoute('projectPeople_show', ['id' => $projectPeople->getId()]);
@@ -87,18 +69,11 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/{id}/remove", name="projectPeople_delete")
      */
-    public function delete(int $id): Response
+    public function delete(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $projectPeople = $em->getRepository(ProjectPeople::class)->find($id);
-
-        if (!$projectPeople) {
-            throw $this->createNotFoundException(
-                'No projectPeople found for id '.$id
-            );
-        }
-
         $em->remove($projectPeople);
         $em->flush();
+
+        return new Response('ProjectPeople was deleted successfully');
     }
 }

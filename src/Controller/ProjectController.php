@@ -33,33 +33,23 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}", name="project_show", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function show(int $id): Response
+    public function show(Project $project): Response
     {
-        $project = $this->getDoctrine()
-            ->getRepository(Project::class)
-            ->find($id);
-
-        if (!$project) {
-            throw $this->createNotFoundException(
-                'No project found for id '.$id
-            );
-        }
-
         return new Response('Check out this great project: '.$project->getTitle());
     }
 
     /**
      * @Route("/new", name="project_create", methods={"GET"})
      */
-    public function create(): Response
+    public function create(EntityManagerInterface $em): Response
     {
         $project = new Project();
 
         $project->setTitle('Project name')
             ->setDescription('Description');
 
-        $this->getDoctrine()->getManager()->persist($project);
-        $this->getDoctrine()->getManager()->flush();
+        $em->persist($project);
+        $em->flush();
 
         return new Response('Saved new project with id '.$project->getId());
     }
@@ -67,18 +57,10 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/edit", name="project_update", methods={"GET"})
      */
-    public function update(int $id): Response
+    public function update(Project $project, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $project = $em->getRepository(Project::class)->find($id);
-
-        if (!$project) {
-            throw $this->createNotFoundException(
-                'No project found for id '.$id
-            );
-        }
-
         $project->setTitle($project->getTitle().' edited');
+
         $em->flush();
 
         return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
@@ -87,18 +69,11 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/remove", name="project_delete")
      */
-    public function delete(int $id): Response
+    public function delete(Project $project, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $project = $em->getRepository(Project::class)->find($id);
-
-        if (!$project) {
-            throw $this->createNotFoundException(
-                'No project found for id '.$id
-            );
-        }
-
         $em->remove($project);
         $em->flush();
+
+        return new Response('Project was deleted successfully');
     }
 }

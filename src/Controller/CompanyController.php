@@ -33,32 +33,22 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}", name="company_show", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function show(int $id): Response
+    public function show(Company $company): Response
     {
-        $company = $this->getDoctrine()
-            ->getRepository(Company::class)
-            ->find($id);
-
-        if (!$company) {
-            throw $this->createNotFoundException(
-                'No company found for id '.$id
-            );
-        }
-
-        return new Response('Check out this great company: '.$company->getTitle());
+         return new Response('Check out this great company: '.$company->getTitle());
     }
 
     /**
      * @Route("/new", name="company_create", methods={"GET"})
      */
-    public function create(): Response
+    public function create(EntityManagerInterface $em): Response
     {
         $company = new Company();
 
         $company->setTitle('Company name');
 
-        $this->getDoctrine()->getManager()->persist($company);
-        $this->getDoctrine()->getManager()->flush();
+        $em->persist($company);
+        $em->flush();
 
         return new Response('Saved new company with id '.$company->getId());
     }
@@ -66,18 +56,10 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}/edit", name="company_update", methods={"GET"})
      */
-    public function update(int $id): Response
+    public function update(Company $company, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository(Company::class)->find($id);
-
-        if (!$company) {
-            throw $this->createNotFoundException(
-                'No company found for id '.$id
-            );
-        }
-
         $company->setTitle($company->getTitle().' edited');
+
         $em->flush();
 
         return $this->redirectToRoute('company_show', ['id' => $company->getId()]);
@@ -86,18 +68,11 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}/remove", name="company_delete")
      */
-    public function delete(int $id): Response
+    public function delete(Company $company, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository(Company::class)->find($id);
-
-        if (!$company) {
-            throw $this->createNotFoundException(
-                'No company found for id '.$id
-            );
-        }
-
         $em->remove($company);
         $em->flush();
+
+        return new Response('Company was deleted successfully');
     }
 }

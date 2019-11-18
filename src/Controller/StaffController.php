@@ -33,25 +33,15 @@ class StaffController extends AbstractController
     /**
      * @Route("/{id}", name="staff_show", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function show(int $id): Response
+    public function show(Staff $staff): Response
     {
-        $staff = $this->getDoctrine()
-            ->getRepository(Staff::class)
-            ->find($id);
-
-        if (!$staff) {
-            throw $this->createNotFoundException(
-                'No staff found for id '.$id
-            );
-        }
-
         return new Response('Check out this great staff: '.$staff->getFullName());
     }
 
     /**
      * @Route("/new", name="staff_create", methods={"GET"})
      */
-    public function create(): Response
+    public function create(EntityManagerInterface $em): Response
     {
         $staff = new Staff();
 
@@ -61,8 +51,8 @@ class StaffController extends AbstractController
             ->setCreatedAt(null)
             ->setSkills('Skills');
 
-        $this->getDoctrine()->getManager()->persist($staff);
-        $this->getDoctrine()->getManager()->flush();
+        $em->persist($staff);
+        $em->flush();
 
         return new Response('Saved new staff with id '.$staff->getId());
     }
@@ -70,18 +60,10 @@ class StaffController extends AbstractController
     /**
      * @Route("/{id}/edit", name="staff_update", methods={"GET"})
      */
-    public function update(int $id): Response
+    public function update(Staff $staff, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $staff = $em->getRepository(Staff::class)->find($id);
-
-        if (!$staff) {
-            throw $this->createNotFoundException(
-                'No staff found for id '.$id
-            );
-        }
-
         $staff->setFullName($staff->getFullName().' edited');
+
         $em->flush();
 
         return $this->redirectToRoute('staff_show', ['id' => $staff->getId()]);
@@ -90,18 +72,11 @@ class StaffController extends AbstractController
     /**
      * @Route("/{id}/remove", name="staff_delete")
      */
-    public function delete(int $id): Response
+    public function delete(Staff $staff, EntityManagerInterface $em): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $staff = $em->getRepository(Staff::class)->find($id);
-
-        if (!$staff) {
-            throw $this->createNotFoundException(
-                'No staff found for id '.$id
-            );
-        }
-
         $em->remove($staff);
         $em->flush();
+
+        return new Response('Staff was deleted successfully');
     }
 }
