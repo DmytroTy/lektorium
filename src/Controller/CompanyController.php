@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Company;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\CompanyType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,66 +15,83 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyController extends AbstractController
 {
     /**
-     * @Route("/", name="company_list", methods={"GET"})
+     * @Route("/", name="company_index", methods={"GET"})
      */
     public function index(): Response
     {
-        $companys = $this->getDoctrine()
+        $companies = $this->getDoctrine()
             ->getRepository(Company::class)
             ->findAll();
 
-        if (!$companys) {
-            throw $this->createNotFoundException(
-                'No company found'
-            );
-        }
-
-        return new Response('Check out this great companys');
+        return $this->render('company/index.html.twig', [
+            'companies' => $companies,
+        ]);
     }
 
     /**
-     * @Route("/{id}", name="company_show", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/new", name="company_new", methods={"GET","POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $company = new Company();
+        $form = $this->createForm(CompanyType::class, $company);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($company);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('company_index');
+        }
+
+        return $this->render('company/new.html.twig', [
+            'company' => $company,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="company_show", methods={"GET"})
      */
     public function show(Company $company): Response
     {
-         return new Response('Check out this great company: '.$company->getTitle());
+        return $this->render('company/show.html.twig', [
+            'company' => $company,
+        ]);
     }
 
     /**
-     * @Route("/new", name="company_create", methods={"GET"})
+     * @Route("/{id}/edit", name="company_edit", methods={"GET","POST"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function edit(Request $request, Company $company): Response
     {
-        $company = new Company();
+        $form = $this->createForm(CompanyType::class, $company);
+        $form->handleRequest($request);
 
-        $company->setTitle('Company name');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
 
-        $em->persist($company);
-        $em->flush();
+            return $this->redirectToRoute('company_index');
+        }
 
-        return new Response('Saved new company with id '.$company->getId());
+        return $this->render('company/edit.html.twig', [
+            'company' => $company,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="company_update", methods={"GET"})
+     * @Route("/{id}", name="company_delete", methods={"DELETE"})
      */
-    public function update(Company $company, EntityManagerInterface $em): Response
+    public function delete(Request $request, Company $company): Response
     {
-        $company->setTitle($company->getTitle().' edited');
+        if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($company);
+            $entityManager->flush();
+        }
 
-        $em->flush();
-
-        return $this->redirectToRoute('company_show', ['id' => $company->getId()]);
-    }
-
-    /**
-     * @Route("/{id}/remove", name="company_delete")
-     */
-    public function delete(Company $company, EntityManagerInterface $em): Response
-    {
-        $em->remove($company);
-        $em->flush();
-
-        return new Response('Company was deleted successfully');
+        return $this->redirectToRoute('company_index');
     }
 }

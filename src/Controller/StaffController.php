@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Staff;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\StaffType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,70 +15,83 @@ use Symfony\Component\Routing\Annotation\Route;
 class StaffController extends AbstractController
 {
     /**
-     * @Route("/", name="staff_list", methods={"GET"})
+     * @Route("/", name="staff_index", methods={"GET"})
      */
     public function index(): Response
     {
-        $staffs = $this->getDoctrine()
+        $staff = $this->getDoctrine()
             ->getRepository(Staff::class)
             ->findAll();
 
-        if (!$staffs) {
-            throw $this->createNotFoundException(
-                'No staff found'
-            );
-        }
-
-        return new Response('Check out this great staffs');
+        return $this->render('staff/index.html.twig', [
+            'staff' => $staff,
+        ]);
     }
 
     /**
-     * @Route("/{id}", name="staff_show", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/new", name="staff_new", methods={"GET","POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $staff = new Staff();
+        $form = $this->createForm(StaffType::class, $staff);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($staff);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('staff_index');
+        }
+
+        return $this->render('staff/new.html.twig', [
+            'staff' => $staff,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="staff_show", methods={"GET"})
      */
     public function show(Staff $staff): Response
     {
-        return new Response('Check out this great staff: '.$staff->getFullName());
+        return $this->render('staff/show.html.twig', [
+            'staff' => $staff,
+        ]);
     }
 
     /**
-     * @Route("/new", name="staff_create", methods={"GET"})
+     * @Route("/{id}/edit", name="staff_edit", methods={"GET","POST"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function edit(Request $request, Staff $staff): Response
     {
-        $staff = new Staff();
+        $form = $this->createForm(StaffType::class, $staff);
+        $form->handleRequest($request);
 
-        $staff->setFullName('Staff name')
-            ->setEmail('Email')
-            ->setPhone('Phone')
-            ->setCreatedAt(null)
-            ->setSkills('Skills');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
 
-        $em->persist($staff);
-        $em->flush();
+            return $this->redirectToRoute('staff_index');
+        }
 
-        return new Response('Saved new staff with id '.$staff->getId());
+        return $this->render('staff/edit.html.twig', [
+            'staff' => $staff,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="staff_update", methods={"GET"})
+     * @Route("/{id}", name="staff_delete", methods={"DELETE"})
      */
-    public function update(Staff $staff, EntityManagerInterface $em): Response
+    public function delete(Request $request, Staff $staff): Response
     {
-        $staff->setFullName($staff->getFullName().' edited');
+        if ($this->isCsrfTokenValid('delete'.$staff->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($staff);
+            $entityManager->flush();
+        }
 
-        $em->flush();
-
-        return $this->redirectToRoute('staff_show', ['id' => $staff->getId()]);
-    }
-
-    /**
-     * @Route("/{id}/remove", name="staff_delete")
-     */
-    public function delete(Staff $staff, EntityManagerInterface $em): Response
-    {
-        $em->remove($staff);
-        $em->flush();
-
-        return new Response('Staff was deleted successfully');
+        return $this->redirectToRoute('staff_index');
     }
 }

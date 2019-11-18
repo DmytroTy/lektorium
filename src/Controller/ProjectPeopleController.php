@@ -3,18 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\ProjectPeople;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\ProjectPeopleType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/projectPeople")
+ * @Route("/project/people")
  */
 class ProjectPeopleController extends AbstractController
 {
     /**
-     * @Route("/", name="projectPeople_list", methods={"GET"})
+     * @Route("/", name="project_people_index", methods={"GET"})
      */
     public function index(): Response
     {
@@ -22,59 +23,75 @@ class ProjectPeopleController extends AbstractController
             ->getRepository(ProjectPeople::class)
             ->findAll();
 
-        if (!$projectPeoples) {
-            throw $this->createNotFoundException(
-                'No projectPeople found'
-            );
+        return $this->render('project_people/index.html.twig', [
+            'project_peoples' => $projectPeoples,
+        ]);
+    }
+
+    /**
+     * @Route("/new", name="project_people_new", methods={"GET","POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $projectPerson = new ProjectPeople();
+        $form = $this->createForm(ProjectPeopleType::class, $projectPerson);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($projectPerson);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('project_people_index');
         }
 
-        return new Response('Check out this great projectPeoples');
+        return $this->render('project_people/new.html.twig', [
+            'project_person' => $projectPerson,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}", name="projectPeople_show", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/{id}", name="project_people_show", methods={"GET"})
      */
-    public function show(ProjectPeople $projectPeople): Response
+    public function show(ProjectPeople $projectPerson): Response
     {
-        return new Response('Check out this great projectPeople: '.$projectPeople->getType());
+        return $this->render('project_people/show.html.twig', [
+            'project_person' => $projectPerson,
+        ]);
     }
 
     /**
-     * @Route("/new", name="projectPeople_create", methods={"GET"})
+     * @Route("/{id}/edit", name="project_people_edit", methods={"GET","POST"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function edit(Request $request, ProjectPeople $projectPerson): Response
     {
-        $projectPeople = new ProjectPeople();
+        $form = $this->createForm(ProjectPeopleType::class, $projectPerson);
+        $form->handleRequest($request);
 
-        $projectPeople->setType('Type')
-            ->setResponsibility('Responsibility');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
 
-        $em->persist($projectPeople);
-        $em->flush();
+            return $this->redirectToRoute('project_people_index');
+        }
 
-        return new Response('Saved new projectPeople with id '.$projectPeople->getId());
+        return $this->render('project_people/edit.html.twig', [
+            'project_person' => $projectPerson,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="projectPeople_update", methods={"GET"})
+     * @Route("/{id}", name="project_people_delete", methods={"DELETE"})
      */
-    public function update(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
+    public function delete(Request $request, ProjectPeople $projectPerson): Response
     {
-        $projectPeople->setType($projectPeople->getType().' edited');
+        if ($this->isCsrfTokenValid('delete'.$projectPerson->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($projectPerson);
+            $entityManager->flush();
+        }
 
-        $em->flush();
-
-        return $this->redirectToRoute('projectPeople_show', ['id' => $projectPeople->getId()]);
-    }
-
-    /**
-     * @Route("/{id}/remove", name="projectPeople_delete")
-     */
-    public function delete(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
-    {
-        $em->remove($projectPeople);
-        $em->flush();
-
-        return new Response('ProjectPeople was deleted successfully');
+        return $this->redirectToRoute('project_people_index');
     }
 }
