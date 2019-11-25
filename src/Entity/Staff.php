@@ -5,6 +5,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity
@@ -43,7 +46,9 @@ class Staff
     private $phone;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date")
      */
     private $createdAt;
 
@@ -71,6 +76,20 @@ class Staff
     public function __construct()
     {
         $this->departments = new ArrayCollection();
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('fullName', new NotBlank());
+        $metadata->addPropertyConstraint('email', new NotBlank());
+        $metadata->addPropertyConstraint('phone', new NotBlank());
+        $metadata->addPropertyConstraint('skills', new NotBlank());
+
+        $metadata->addPropertyConstraint('createdAt', new NotBlank());
+        $metadata->addPropertyConstraint(
+            'createdAt',
+            new Type(\DateTime::class)
+        );
     }
 
     /**
@@ -136,18 +155,18 @@ class Staff
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param mixed $createdAt
+     * @param \DateTime $createdAt
      * @return $this
      */
-    public function setCreatedAt($createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;

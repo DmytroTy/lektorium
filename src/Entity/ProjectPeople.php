@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity
@@ -40,6 +43,12 @@ class ProjectPeople
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $project;
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('type', new NotBlank());
+        $metadata->addPropertyConstraint('responsibility', new NotBlank());
+    }
 
     /**
      * @return int
