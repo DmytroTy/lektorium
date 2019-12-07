@@ -47,8 +47,7 @@ class DepartmentController extends AbstractController
         $department = new Department();
 
         $department->setTitle('Department name')
-            ->setDescription('Description')
-            ->setTeamLead('TeamLead');
+            ->setDescription('Description');
 
         $em->persist($department);
         $em->flush();
