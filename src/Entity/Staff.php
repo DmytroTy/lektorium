@@ -43,6 +43,8 @@ class Staff
     private $phone;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="date", nullable=true)
      */
     private $createdAt;
