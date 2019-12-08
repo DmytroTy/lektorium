@@ -36,9 +36,10 @@ class Department
     private $description;
 
     /**
-     * @var string
+     * @var Staff
      *
-     * @ORM\Column(type="string", length=100)
+     * @ORM\OneToOne(targetEntity="App\Entity\Staff")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $teamLead;
 
@@ -107,18 +108,18 @@ class Department
     }
 
     /**
-     * @return string
+     * @return Staff
      */
-    public function getTeamLead(): string
+    public function getTeamLead(): Staff
     {
         return $this->teamLead;
     }
 
     /**
-     * @param string $teamLead
-     * @return $this
+     * @param Staff $teamLead
+     * @return Department
      */
-    public function setTeamLead(string $teamLead): self
+    public function setTeamLead(Staff $teamLead): self
     {
         $this->teamLead = $teamLead;
         return $this;
@@ -136,7 +137,7 @@ class Department
      * @param Company $company
      * @return Department
      */
-    public function setCompany(Company $company): Department
+    public function setCompany(Company $company): self
     {
         $this->company = $company;
         return $this;
