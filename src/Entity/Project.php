@@ -75,7 +75,7 @@ class Project
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -93,7 +93,7 @@ class Project
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -111,7 +111,7 @@ class Project
     /**
      * @return Company
      */
-    public function getCompany(): Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
@@ -120,7 +120,7 @@ class Project
      * @param Company $company
      * @return Project
      */
-    public function setCompany(Company $company): Project
+    public function setCompany(Company $company): self
     {
         $this->company = $company;
         return $this;

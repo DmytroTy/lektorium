@@ -84,7 +84,7 @@ class Department
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -102,7 +102,7 @@ class Department
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -120,7 +120,7 @@ class Department
     /**
      * @return Staff
      */
-    public function getTeamLead(): Staff
+    public function getTeamLead(): ?Staff
     {
         return $this->teamLead;
     }
@@ -138,7 +138,7 @@ class Department
     /**
      * @return Company
      */
-    public function getCompany(): Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }

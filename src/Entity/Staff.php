@@ -103,7 +103,7 @@ class Staff
     /**
      * @return string
      */
-    public function getFullName(): string
+    public function getFullName(): ?string
     {
         return $this->fullName;
     }
@@ -121,7 +121,7 @@ class Staff
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -139,7 +139,7 @@ class Staff
     /**
      * @return string
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -157,7 +157,7 @@ class Staff
     /**
      * @return \DateTime
      */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
@@ -175,7 +175,7 @@ class Staff
     /**
      * @return string
      */
-    public function getSkills(): string
+    public function getSkills(): ?string
     {
         return $this->skills;
     }
@@ -193,7 +193,7 @@ class Staff
     /**
      * @return string
      */
-    public function getComments(): string
+    public function getComments(): ?string
     {
         return $this->comments;
     }
