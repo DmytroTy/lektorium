@@ -40,7 +40,7 @@ class ProjectPeople
      * @var Project
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Project", inversedBy="people")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $project;
 

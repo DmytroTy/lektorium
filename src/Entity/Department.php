@@ -50,7 +50,7 @@ class Department
      * @var Company
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="departments")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $company;
 
