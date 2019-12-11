@@ -42,14 +42,14 @@ class CompanyController extends AbstractController
     /**
      * @Route("/new", name="company_create", methods={"GET"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function create(): Response
     {
         $company = new Company();
 
         $company->setTitle('Company name');
 
-        $em->persist($company);
-        $em->flush();
+        $this->getDoctrine()->getManager()->persist($company);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Saved new company with id '.$company->getId());
     }
@@ -57,11 +57,11 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}/edit", name="company_update", methods={"GET"})
      */
-    public function update(Company $company, EntityManagerInterface $em): Response
+    public function update(Company $company): Response
     {
         $company->setTitle($company->getTitle().' edited');
 
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('company_show', ['id' => $company->getId()]);
     }
@@ -69,10 +69,10 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}/remove", name="company_delete")
      */
-    public function delete(Company $company, EntityManagerInterface $em): Response
+    public function delete(Company $company): Response
     {
-        $em->remove($company);
-        $em->flush();
+        $this->getDoctrine()->getManager()->remove($company);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Company was deleted successfully');
     }

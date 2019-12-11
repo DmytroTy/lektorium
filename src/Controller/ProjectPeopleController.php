@@ -42,15 +42,15 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/new", name="projectPeople_create", methods={"GET"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function create(): Response
     {
         $projectPeople = new ProjectPeople();
 
         $projectPeople->setType('Type')
             ->setResponsibility('Responsibility');
 
-        $em->persist($projectPeople);
-        $em->flush();
+        $this->getDoctrine()->getManager()->persist($projectPeople);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Saved new projectPeople with id '.$projectPeople->getId());
     }
@@ -58,11 +58,11 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/{id}/edit", name="projectPeople_update", methods={"GET"})
      */
-    public function update(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
+    public function update(ProjectPeople $projectPeople): Response
     {
         $projectPeople->setType($projectPeople->getType().' edited');
 
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('projectPeople_show', ['id' => $projectPeople->getId()]);
     }
@@ -70,10 +70,10 @@ class ProjectPeopleController extends AbstractController
     /**
      * @Route("/{id}/remove", name="projectPeople_delete")
      */
-    public function delete(ProjectPeople $projectPeople, EntityManagerInterface $em): Response
+    public function delete(ProjectPeople $projectPeople): Response
     {
-        $em->remove($projectPeople);
-        $em->flush();
+        $this->getDoctrine()->getManager()->remove($projectPeople);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('ProjectPeople was deleted successfully');
     }

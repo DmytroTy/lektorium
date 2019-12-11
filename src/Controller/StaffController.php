@@ -42,7 +42,7 @@ class StaffController extends AbstractController
     /**
      * @Route("/new", name="staff_create", methods={"GET"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function create(): Response
     {
         $staff = new Staff();
 
@@ -52,8 +52,8 @@ class StaffController extends AbstractController
             ->setCreatedAt(null)
             ->setSkills('Skills');
 
-        $em->persist($staff);
-        $em->flush();
+        $this->getDoctrine()->getManager()->persist($staff);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Saved new staff with id '.$staff->getId());
     }
@@ -61,11 +61,11 @@ class StaffController extends AbstractController
     /**
      * @Route("/{id}/edit", name="staff_update", methods={"GET"})
      */
-    public function update(Staff $staff, EntityManagerInterface $em): Response
+    public function update(Staff $staff): Response
     {
         $staff->setFullName($staff->getFullName().' edited');
 
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('staff_show', ['id' => $staff->getId()]);
     }
@@ -73,10 +73,10 @@ class StaffController extends AbstractController
     /**
      * @Route("/{id}/remove", name="staff_delete")
      */
-    public function delete(Staff $staff, EntityManagerInterface $em): Response
+    public function delete(Staff $staff): Response
     {
-        $em->remove($staff);
-        $em->flush();
+        $this->getDoctrine()->getManager()->remove($staff);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Staff was deleted successfully');
     }

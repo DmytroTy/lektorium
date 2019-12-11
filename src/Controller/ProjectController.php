@@ -42,15 +42,15 @@ class ProjectController extends AbstractController
     /**
      * @Route("/new", name="project_create", methods={"GET"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function create(): Response
     {
         $project = new Project();
 
         $project->setTitle('Project name')
             ->setDescription('Description');
 
-        $em->persist($project);
-        $em->flush();
+        $this->getDoctrine()->getManager()->persist($project);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Saved new project with id '.$project->getId());
     }
@@ -58,11 +58,11 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/edit", name="project_update", methods={"GET"})
      */
-    public function update(Project $project, EntityManagerInterface $em): Response
+    public function update(Project $project): Response
     {
         $project->setTitle($project->getTitle().' edited');
 
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('project_show', ['id' => $project->getId()]);
     }
@@ -70,10 +70,10 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/remove", name="project_delete")
      */
-    public function delete(Project $project, EntityManagerInterface $em): Response
+    public function delete(Project $project): Response
     {
-        $em->remove($project);
-        $em->flush();
+        $this->getDoctrine()->getManager()->remove($project);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Project was deleted successfully');
     }

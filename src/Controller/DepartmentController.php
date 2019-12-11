@@ -42,15 +42,15 @@ class DepartmentController extends AbstractController
     /**
      * @Route("/new", name="department_create", methods={"GET"})
      */
-    public function create(EntityManagerInterface $em): Response
+    public function create(): Response
     {
         $department = new Department();
 
         $department->setTitle('Department name')
             ->setDescription('Description');
 
-        $em->persist($department);
-        $em->flush();
+        $this->getDoctrine()->getManager()->persist($department);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Saved new department with id '.$department->getId());
     }
@@ -58,11 +58,11 @@ class DepartmentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="department_update", methods={"GET"})
      */
-    public function update(Department $department, EntityManagerInterface $em): Response
+    public function update(Department $department): Response
     {
         $department->setTitle($department->getTitle().' edited');
 
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('department_show', ['id' => $department->getId()]);
     }
@@ -70,10 +70,10 @@ class DepartmentController extends AbstractController
     /**
      * @Route("/{id}/remove", name="department_delete")
      */
-    public function delete(Department $department, EntityManagerInterface $em): Response
+    public function delete(Department $department): Response
     {
-        $em->remove($department);
-        $em->flush();
+        $this->getDoctrine()->getManager()->remove($department);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response('Department was deleted successfully');
     }
