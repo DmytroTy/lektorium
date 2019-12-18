@@ -5,9 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -27,6 +25,7 @@ class Staff
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=100)
      */
     private $fullName;
@@ -34,6 +33,7 @@ class Staff
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=30)
      */
     private $email;
@@ -41,6 +41,7 @@ class Staff
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=15)
      */
     private $phone;
@@ -48,6 +49,8 @@ class Staff
     /**
      * @var \DateTime
      *
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTime")
      * @ORM\Column(type="date")
      */
     private $createdAt;
@@ -55,6 +58,7 @@ class Staff
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=100)
      */
     private $skills;
@@ -76,20 +80,6 @@ class Staff
     public function __construct()
     {
         $this->departments = new ArrayCollection();
-    }
-
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('fullName', new NotBlank());
-        $metadata->addPropertyConstraint('email', new NotBlank());
-        $metadata->addPropertyConstraint('phone', new NotBlank());
-        $metadata->addPropertyConstraint('skills', new NotBlank());
-
-        $metadata->addPropertyConstraint('createdAt', new NotBlank());
-        $metadata->addPropertyConstraint(
-            'createdAt',
-            new Type(\DateTime::class)
-        );
     }
 
     /**

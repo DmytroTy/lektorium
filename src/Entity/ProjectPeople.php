@@ -3,9 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -25,6 +23,7 @@ class ProjectPeople
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=15)
      */
     private $type;
@@ -32,6 +31,7 @@ class ProjectPeople
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=100)
      */
     private $responsibility;
@@ -43,12 +43,6 @@ class ProjectPeople
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $project;
-
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('type', new NotBlank());
-        $metadata->addPropertyConstraint('responsibility', new NotBlank());
-    }
 
     /**
      * @return int
