@@ -26,6 +26,12 @@ class Staff
      * @var string
      *
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 100,
+     *      minMessage = "Your full name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your full name cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="string", length=100)
      */
     private $fullName;
@@ -34,6 +40,7 @@ class Staff
      * @var string
      *
      * @Assert\NotBlank()
+     * @Assert\Email()
      * @ORM\Column(type="string", length=30)
      */
     private $email;
@@ -41,7 +48,8 @@ class Staff
     /**
      * @var string
      *
-     * @Assert\NotBlank()
+     * @Assert\Length(min = 10)
+     * @Assert\Regex("/^\+?\d+$/A")
      * @ORM\Column(type="string", length=15)
      */
     private $phone;
