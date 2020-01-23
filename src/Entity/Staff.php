@@ -55,6 +55,11 @@ class Staff
     private $phone;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $showContacts;
+
+    /**
      * @var \DateTime
      *
      * @Assert\NotBlank()
@@ -236,6 +241,25 @@ class Staff
         if ($this->departments->contains($department)) {
             $this->departments->removeElement($department);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowContacts(): ?bool
+    {
+        return $this->showContacts;
+    }
+
+    /**
+     * @param bool $showContacts
+     * @return $this
+     */
+    public function setShowContacts(bool $showContacts): self
+    {
+        $this->showContacts = $showContacts;
 
         return $this;
     }

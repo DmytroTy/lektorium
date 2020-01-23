@@ -34,7 +34,8 @@ class StaffController extends AbstractController
     public function new(Request $request): Response
     {
         $staff = new Staff();
-        $staff->setCreatedAt(new \DateTime('today'));
+        $staff->setCreatedAt(new \DateTime('today'))
+            ->setShowContacts(true);
         $form = $this->createForm(StaffType::class, $staff);
         $form->handleRequest($request);
 

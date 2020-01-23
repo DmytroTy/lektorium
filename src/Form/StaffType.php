@@ -15,6 +15,7 @@ class StaffType extends AbstractType
     {
         $builder
             ->add('fullName')
+            ->add('showContacts')
             ->add('email')
             ->add('phone')
             ->add('createdAt')
