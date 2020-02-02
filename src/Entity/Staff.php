@@ -122,6 +122,25 @@ class Staff
     }
 
     /**
+     * @return bool
+     */
+    public function isShowContacts(): ?bool
+    {
+        return $this->showContacts;
+    }
+
+    /**
+     * @param bool $showContacts
+     * @return $this
+     */
+    public function setShowContacts(bool $showContacts): self
+    {
+        $this->showContacts = $showContacts;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getEmail(): ?string
@@ -241,25 +260,6 @@ class Staff
         if ($this->departments->contains($department)) {
             $this->departments->removeElement($department);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShowContacts(): ?bool
-    {
-        return $this->showContacts;
-    }
-
-    /**
-     * @param bool $showContacts
-     * @return $this
-     */
-    public function setShowContacts(bool $showContacts): self
-    {
-        $this->showContacts = $showContacts;
 
         return $this;
     }
