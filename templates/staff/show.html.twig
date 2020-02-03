@@ -15,18 +15,16 @@
                 <th>FullName</th>
                 <td>{{ staff.fullName }}</td>
             </tr>
-            <tr>
-                <th>ShowContacts</th>
-                <td>{{ staff.showContacts }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ staff.email }}</td>
-            </tr>
-            <tr>
-                <th>Phone</th>
-                <td>{{ staff.phone }}</td>
-            </tr>
+            {% if staff.showContacts %}
+                <tr>
+                    <th>Email</th>
+                    <td>{{ staff.email }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ staff.phone }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>CreatedAt</th>
                 <td>{{ staff.createdAt ? staff.createdAt|date('Y-m-d') : '' }}</td>

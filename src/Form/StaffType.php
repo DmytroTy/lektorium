@@ -69,10 +69,10 @@ class StaffType extends AbstractType
             $form
                 ->add('email')
                 ->add('phone');
-        } else {
+        } /*else {
             unset($user['email']);
             unset($user['phone']);
             $event->setData($user);
-        }
+        }*/
     }
 }
