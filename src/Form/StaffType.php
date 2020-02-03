@@ -13,6 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StaffType extends AbstractType
 {
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @var string
+     */
+    private $phone;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -53,6 +63,9 @@ class StaffType extends AbstractType
             $form
                 ->add('email')
                 ->add('phone');
+        } else {
+            $this->email = $user->getEmail();
+            $this->phone = $user->getPhone();
         }
     }
 
@@ -69,10 +82,9 @@ class StaffType extends AbstractType
             $form
                 ->add('email')
                 ->add('phone');
-        } /*else {
-            unset($user['email']);
-            unset($user['phone']);
+            $user['email'] = $this->email;
+            $user['phone'] = $this->phone;
             $event->setData($user);
-        }*/
+        }
     }
 }
