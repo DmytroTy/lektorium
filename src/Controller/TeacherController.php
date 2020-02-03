@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Teacher;
 use App\Form\TeacherType;
 use App\Repository\TeacherRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TeacherController extends AbstractController
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * TeacherController constructor.
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+
     /**
      * @Route("/", name="teacher_index", methods={"GET"})
      */
@@ -38,6 +53,9 @@ class TeacherController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($teacher);
             $entityManager->flush();
+
+            $this->logger->info("Teacher was created(construct)",
+                ['teacher_id' => $teacher->getId()]);
 
             return $this->redirectToRoute('teacher_index');
         }
