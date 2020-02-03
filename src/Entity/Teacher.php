@@ -31,6 +31,11 @@ class Teacher
      */
     private $course;
 
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $email;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +73,18 @@ class Teacher
     public function setCourse(?Course $course): self
     {
         $this->course = $course;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
