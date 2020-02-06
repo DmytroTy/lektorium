@@ -27,14 +27,14 @@ class Teacher
     private $lastName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Course", inversedBy="teachers")
-     */
-    private $course;
-
-    /**
      * @ORM\Column(type="string", length=30)
      */
     private $email;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Course", inversedBy="teachers")
+     */
+    private $course;
 
     public function getId(): ?int
     {
@@ -65,18 +65,6 @@ class Teacher
         return $this;
     }
 
-    public function getCourse(): ?Course
-    {
-        return $this->course;
-    }
-
-    public function setCourse(?Course $course): self
-    {
-        $this->course = $course;
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -85,6 +73,18 @@ class Teacher
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCourse(): ?Course
+    {
+        return $this->course;
+    }
+
+    public function setCourse(?Course $course): self
+    {
+        $this->course = $course;
 
         return $this;
     }

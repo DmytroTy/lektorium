@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Teacher;
 use App\Form\TeacherType;
 use App\Repository\TeacherRepository;
+use App\Service\Notify;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,7 @@ class TeacherController extends AbstractController
     /**
      * @Route("/new", name="teacher_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, Notify $notify): Response
     {
         $teacher = new Teacher();
         $form = $this->createForm(TeacherType::class, $teacher);
@@ -56,6 +57,7 @@ class TeacherController extends AbstractController
 
             $this->logger->info("Teacher was created(construct)",
                 ['teacher_id' => $teacher->getId()]);
+            $notify->notifyEmail($teacher->getEmail());
 
             return $this->redirectToRoute('teacher_index');
         }
